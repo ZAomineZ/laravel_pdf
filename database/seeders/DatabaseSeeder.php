@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Etudiant;
+use App\Models\Student;
 use Illuminate\Database\Seeder;
 
 final class DatabaseSeeder extends Seeder
@@ -18,7 +18,7 @@ final class DatabaseSeeder extends Seeder
     public function run(): void
     {
         foreach (range(1, 100) as $index) {
-            Etudiant::factory()->create();
+            Student::factory()->create();
         }
     }
 }

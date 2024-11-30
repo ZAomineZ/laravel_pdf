@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Etudiant;
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Etudiant>
+ * @extends Factory<Student>
  */
-final class EtudiantFactory extends Factory
+final class StudentFactory extends Factory
 {
     /**
      * Define the model's default state.

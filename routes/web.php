@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\EtudiantPDFController;
+use App\Http\Controllers\StudentPDFController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/list_etudiant_pdf', [EtudiantPDFController::class, 'index']);
-Route::get('/list_etudiant_pdf/pdf', [EtudiantPDFController::class, 'pdf']);
+Route::get('/list_students_pdf', [StudentPDFController::class, 'index']);
+Route::get('/list_students_pdf/pdf', [StudentPDFController::class, 'pdf']);

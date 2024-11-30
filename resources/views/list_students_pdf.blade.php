@@ -22,10 +22,10 @@
     <br/>
     <div class="row">
         <div class="col-md-7" align="right">
-            <h4>Etudiant Data</h4>
+            <h4>Student Data</h4>
         </div>
         <div class="col-md-5" align="right">
-            <a href="{{ url('list_etudiant_pdf/pdf') }}">Download PDF</a>
+            <a href="{{ url('list_students_pdf/pdf') }}">Download PDF</a>
         </div>
     </div>
     <br/>
@@ -44,16 +44,16 @@
             </tr>
             </thead>
             <tbody>
-                @foreach($etudiantData as $etudiant)
+                @foreach($studentData as $student)
                     <tr>
-                        <td>{{ $etudiant->id }}</td>
-                        <td>{{ $etudiant->firstname }}</td>
-                        <td>{{ $etudiant->lastname }}</td>
-                        <td>{{ $etudiant->email }}</td>
-                        <td>{{ $etudiant->name_util }}</td>
-                        <td>{{ $etudiant->telephone }}</td>
-                        <td>{{ $etudiant->birthday }}</td>
-                        <td>{{ $etudiant->gender }}</td>
+                        <td>{{ $student->id }}</td>
+                        <td>{{ $student->firstname }}</td>
+                        <td>{{ $student->lastname }}</td>
+                        <td>{{ $student->email }}</td>
+                        <td>{{ $student->name_util }}</td>
+                        <td>{{ $student->telephone }}</td>
+                        <td>{{ $student->birthday }}</td>
+                        <td>{{ $student->gender }}</td>
                     </tr>
                 @endforeach
             </tbody>

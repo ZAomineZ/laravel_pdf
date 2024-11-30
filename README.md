@@ -50,15 +50,15 @@ Add an alias for convenience (optional):
 Generate a model with a migration:
 
 ```php
-php artisan make:model Etudiant -m
+php artisan make:model Student -m
 ```
 
-In the migration file database/migrations/<timestamp>_create_etudiants_table.php, define the columns:
+In the migration file database/migrations/<timestamp>_create_students_table.php, define the columns:
 
 ```php
 public function up()
 {
-    Schema::create('etudiants', function (Blueprint $table) {
+    Schema::create('students', function (Blueprint $table) {
         $table->id();
         $table->string('firstname');
         $table->string('lastname');
@@ -85,10 +85,10 @@ php artisan migrate
 Add a seeder to generate sample students. Create a factory with:
 
 ```bash
-php artisan make:factory EtudiantFactory --model=Etudiant
+php artisan make:factory StudentFactory --model=Student
 ```
 
-In `database/factories/EtudiantFactory.php`:
+In `database/factories/StudentFactory.php`:
 
 ```php
 use Faker\Generator as Faker;
@@ -110,7 +110,7 @@ public function definition()
 Add the seeder logic in `DatabaseSeeder.php`:
 
 ```php
-Etudiant::factory(100)->create();
+Student::factory(100)->create();
 ```
 
 Run the seeders:
@@ -126,10 +126,10 @@ php artisan db:seed
 Create a controller with:
 
 ```bash
-php artisan make:controller EtudiantPDFController
+php artisan make:controller StudentPDFController
 ```
 
-Add methods to display data in a view and generate a PDF file in `EtudiantPDFController.php`:
+Add methods to display data in a view and generate a PDF file in `StudentPDFController.php`:
 
 ```php
 <?php
@@ -138,35 +138,35 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Etudiant;
+use App\Models\Student;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\App;
 
-final class EtudiantPDFController extends Controller
+final class StudentPDFController extends Controller
 {
     public function index(): Factory|View|Application
     {
-        $etudiantData = $this->getEtudiantData();
-        return view('list_etudiant_pdf', compact('etudiantData'));
+        $studentData = $this->getStudentData();
+        return view('list_students_pdf', compact('studentData'));
     }
 
     public function pdf()
     {
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadHTML($this->convertEtudiantDataToHtml());
+        $pdf->loadHTML($this->convertStudentDataToHtml());
         $pdf->getDomPDF()->set_option('enable_php', true);
         $pdf->setPaper('a4', 'landscape');
         return $pdf->stream();
     }
 
-    protected function convertEtudiantDataToHtml(): string
+    protected function convertStudentDataToHtml(): string
     {
-        $etudiantData = $this->getEtudiantData();
+        $studentData = $this->getStudentData();
 
         $output = '
-            <h3 align="center">Liste des étudiants</h3>
+            <h3 align="center">List of students</h3>
             <table width="100%" style="border-collapse: collapse; border: 0px;">
                 <tr>
                     <th style="border: 1px solid; padding: 6px; width: 10%">ID</th>
@@ -178,16 +178,16 @@ final class EtudiantPDFController extends Controller
                     <th style="border: 1px solid; padding: 6px; width: 10%">Gender</th>
                 </tr>
         ';
-        foreach ($etudiantData as $etudiant) {
+        foreach ($studentData as $student) {
             $output .= '
                  <tr>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->id .'</td>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->firstname .'</td>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->lastname .'</td>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->name_util .'</td>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->telephone .'</td>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->birthday .'</td>
-                    <td style="border: 1px solid; padding: 6px">'. $etudiant->gender .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->id .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->firstname .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->lastname .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->name_util .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->telephone .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->birthday .'</td>
+                    <td style="border: 1px solid; padding: 6px">'. $student->gender .'</td>
                 </tr>
             ';
         }
@@ -207,9 +207,9 @@ final class EtudiantPDFController extends Controller
         return $output;
     }
 
-    protected function getEtudiantData()
+    protected function getStudentData()
     {
-        return Etudiant::get();
+        return Student::get();
     }
 }
 ```
@@ -218,7 +218,7 @@ final class EtudiantPDFController extends Controller
 
 ### 5. Create the View to Display the Data
 
-In `resources/views/list_etudiant_pdf.blade.php`:
+In `resources/views/list_students_pdf.blade.php`:
 
 ```bladehtml
 <!doctype html>
@@ -245,7 +245,7 @@ In `resources/views/list_etudiant_pdf.blade.php`:
     <br/>
     <div class="row">
         <div class="col-md-7" align="right">
-            <h4>Etudiant Data</h4>
+            <h4>Student Data</h4>
         </div>
         <div class="col-md-5" align="right">
             <a href="{{ url('list_etudiant_pdf/pdf') }}">Download PDF</a>
@@ -267,16 +267,16 @@ In `resources/views/list_etudiant_pdf.blade.php`:
             </tr>
             </thead>
             <tbody>
-                @foreach($etudiantData as $etudiant)
+                @foreach($studentData as $student)
                     <tr>
-                        <td>{{ $etudiant->id }}</td>
-                        <td>{{ $etudiant->firstname }}</td>
-                        <td>{{ $etudiant->lastname }}</td>
-                        <td>{{ $etudiant->email }}</td>
-                        <td>{{ $etudiant->name_util }}</td>
-                        <td>{{ $etudiant->telephone }}</td>
-                        <td>{{ $etudiant->birthday }}</td>
-                        <td>{{ $etudiant->gender }}</td>
+                        <td>{{ $student->id }}</td>
+                        <td>{{ $student->firstname }}</td>
+                        <td>{{ $student->lastname }}</td>
+                        <td>{{ $student->email }}</td>
+                        <td>{{ $student->name_util }}</td>
+                        <td>{{ $student->telephone }}</td>
+                        <td>{{ $student->birthday }}</td>
+                        <td>{{ $student->gender }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -294,13 +294,13 @@ In `resources/views/list_etudiant_pdf.blade.php`:
 In `routes/web.php`:
 
 ```php
-Route::get('/list_etudiant_pdf', [EtudiantPDFController::class, 'index']);
-Route::get('/list_etudiant_pdf/pdf', [EtudiantPDFController::class, 'pdf']);
+Route::get('/list_students_pdf', [EtudiantPDFController::class, 'index']);
+Route::get('/list_students_pdf/pdf', [EtudiantPDFController::class, 'pdf']);
 ```
 
 ---
 
 ### 7. Test the Application
 
-- Visit `/list_etudiant_pdf `to view the student list.
+- Visit `/list_students_pdf `to view the student list.
 - Click "Download PDF" to generate and display the PDF.
